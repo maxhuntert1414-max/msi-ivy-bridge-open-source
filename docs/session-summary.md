@@ -16,6 +16,7 @@ This repository came from a hands-on tuning session for MSI BlueStacks on an Ivy
 - ARM64 mapping: `arm64 -> x86_64`
 - Example app ABI: `arm64-v8a`
 - Dexopt: `x86_64 [status=speed]`
+- Elevated persistence check: admin run confirmed config, VM profile, and power plan persistence
 
 ## Changes Made
 
@@ -28,6 +29,7 @@ This repository came from a hands-on tuning session for MSI BlueStacks on an Ivy
 7. Applied Ivy Bridge-specific ART feature props.
 8. Recompiled the target package with dexopt speed mode.
 9. Avoided APK/system mutation that would increase account or anti-cheat risk.
+10. Added an elevated persistence check for the BlueStacks config, `BstkVMMgr` VM profile, and Windows power plan.
 
 ## Commands Used Most Often
 
@@ -41,6 +43,12 @@ Verify current runtime:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-xeon-verify.ps1" -AdbPort 5555
+```
+
+Verify persistent host/VM settings:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-xeon-admin-persistence-check.ps1"
 ```
 
 ## What Was Left Alone

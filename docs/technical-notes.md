@@ -87,6 +87,29 @@ When the VM is powered off, the script also attempts:
 BstkVMMgr.exe modifyvm Pie64 --cpus 8 --memory 8192 --vm-process-priority high --large-pages on
 ```
 
+## Admin Persistence Check
+
+The elevated persistence check writes a timestamped report under `outputs/` and backs up the touched BlueStacks files under `work/`.
+
+In the verified session, the elevated check reported:
+
+```text
+IsAdmin: True
+NumberOfCores: 8
+NumberOfLogicalProcessors: 16
+bst.instance.Pie64.cpus="8"
+bst.instance.Pie64.ram="8192"
+bst.mem_opt_mode="0"
+modifyvm_exit=0
+memory=8192
+cpus=8
+largepages="on"
+vmprocpriority="high"
+Power plan: Desempenho Maximo
+```
+
+This confirms persistence at the Windows power-plan, BlueStacks config-file, and powered-off VM-profile layers. ART `setprop` values remain Android runtime state and should be reapplied after a full emulator restart.
+
 ## Known Residual Warning
 
 Some BlueStacks builds keep this stock value in `/system/build.prop`:

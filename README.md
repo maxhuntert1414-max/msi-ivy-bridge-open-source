@@ -21,6 +21,7 @@ The optimizer script:
 - Stages the Pie64 instance for 8 vCPU when Hyper-Threading exposes 16 logical CPUs.
 - Uses 6 vCPU when the host exposes only 8 logical CPUs.
 - Keeps RAM at 8192 MB.
+- Persists the powered-off VM profile with `BstkVMMgr.exe` when available.
 - Preserves high-performance BlueStacks mode with `mem_opt_mode=0` and `enable_high_fps=1`.
 - Enables Vulkan/AGA renderer settings already known to work on the tested machine.
 - Sets ASTC decoding mode to `hardware` by default.
@@ -63,6 +64,12 @@ Verify the current state:
 powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-xeon-verify.ps1" -AdbPort 5555
 ```
 
+Run the elevated persistence check after closing the emulator VM:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-xeon-admin-persistence-check.ps1"
+```
+
 If ASTC hardware causes visual artifacts on your GPU, revert it:
 
 ```powershell
@@ -79,6 +86,7 @@ If the emulator is closed, the script can also try to persist the VirtualBox/Blu
 
 - `tools/msi-xeon-optimize.ps1`: main tuning script.
 - `tools/msi-xeon-verify.ps1`: verification script.
+- `tools/msi-xeon-admin-persistence-check.ps1`: elevated host/VM persistence check.
 - `docs/technical-notes.md`: explanation of the technical findings.
 - `docs/session-summary.md`: what was changed during the original tuning session.
 
