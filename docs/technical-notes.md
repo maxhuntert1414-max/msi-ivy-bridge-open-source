@@ -113,7 +113,36 @@ vmprocpriority="high"
 Power plan: Desempenho Maximo
 ```
 
-This confirms persistence at the Windows power-plan, BlueStacks config-file, and powered-off VM-profile layers. ART `setprop` values remain Android runtime state and should be reapplied after a full emulator restart.
+This confirms persistence at the Windows power-plan, BlueStacks config-file, and powered-off VM-profile layers.
+
+## Integral Android Prop Patch
+
+The public optimizer keeps ART changes as runtime `setprop` operations. On the original lab machine, the final verified state was made persistent by an offline patch to `Data.vhdx`.
+
+The live Android files were pulled first:
+
+```text
+/data/.propfile
+/data/.abipropfile
+/data/.bluestacks.prop
+```
+
+Then `Data.vhdx` was backed up and the exact matching blobs were replaced with same-length edited blobs. The persistent values were:
+
+```text
+dalvik.vm.heapsize=512m
+dalvik.vm.isa.x86_64.features=ssse3,sse4.1,sse4.2,popcnt,avx
+dalvik.vm.isa.x86.features=ssse3,sse4.1,sse4.2,popcnt,avx
+```
+
+Root was not left enabled:
+
+```text
+bst.instance.Pie64.enable_root_access="0"
+uid=2000(shell)
+```
+
+After a full emulator restart, `getprop` returned the patched values directly, without rerunning the optimizer.
 
 ## Renderer A/B Testing
 

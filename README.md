@@ -96,7 +96,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-xeon-optimize.p
 
 ## Important Notes
 
-The ART `setprop` values are runtime state. They can reset after a full Android/emulator reboot, so rerun the optimizer after restarting MSI BlueStacks.
+The ART `setprop` values from the public optimizer script are runtime state. They can reset after a full Android/emulator reboot, so rerun the optimizer after restarting MSI BlueStacks unless you have performed an offline disk-level prop patch.
+
+In the original lab machine, the final state was made integral by patching the existing `/data/.propfile`, `/data/.abipropfile`, and `/data/.bluestacks.prop` blobs inside `Data.vhdx` after a full backup. That is intentionally documented instead of automated here because raw VHDX byte patching is machine-specific and easy to misuse.
 
 If the emulator is closed, the script can also try to persist the VirtualBox/BlueStacks VM profile through `BstkVMMgr.exe`. If the VM is running or locked, this step may fail harmlessly; the BlueStacks config file still remains staged.
 
