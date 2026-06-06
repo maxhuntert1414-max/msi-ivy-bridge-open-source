@@ -71,6 +71,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-renderer-abtest
 powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-renderer-abtest.ps1" -Mode SetVulkan -TargetFps 240
 ```
 
+On the tested Free Fire normal setup, OpenGL AGA crashed during launch. Vulkan AGA is the recommended fallback profile.
+
 Collect CPU/GPU metrics while the emulator is running:
 
 ```powershell

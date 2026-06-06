@@ -125,6 +125,8 @@ Both profiles keep dedicated GPU preference, high FPS mode, vsync off, and hardw
 
 Use `-TargetFps 240` or another explicit high value when comparing input feel. Keeping the same FPS target across profiles matters more than comparing renderer names in isolation.
 
+In the tested Free Fire normal session, OpenGL AGA reached game startup but crashed shortly after with GL/EGL errors followed by a native `SIGSEGV` in `libhoudini.so`. The profile was reverted to Vulkan AGA with `TargetFps=240`.
+
 ## Known Residual Warning
 
 Some BlueStacks builds keep this stock value in `/system/build.prop`:
