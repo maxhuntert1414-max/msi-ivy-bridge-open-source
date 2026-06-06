@@ -31,8 +31,11 @@ The optimizer script:
   - `sse4.1`
   - `sse4.2`
   - `popcnt`
-  - explicitly excludes `avx` and `avx2`
-- Recompiles the selected Android package with `cmd package compile -m speed`.
+  - `avx`
+  - does not include `avx2`
+- Sets Android animation scales to `0.0`.
+- Stages Dalvik heap props for future app launches.
+- Recompiles the selected Android package with `cmd package compile -m speed-profile`.
 - Verifies CPU count, ABI, native bridge, and dexopt status.
 
 ## What This Does Not Do
@@ -103,6 +106,7 @@ If the emulator is closed, the script can also try to persist the VirtualBox/Blu
 - `tools/msi-xeon-verify.ps1`: verification script.
 - `tools/msi-xeon-admin-persistence-check.ps1`: elevated host/VM persistence check.
 - `tools/msi-renderer-abtest.ps1`: reversible renderer profile and metrics helper.
+- `tools/set-hd-player-priority.ps1`: elevated helper for setting `HD-Player.exe` to High priority.
 - `docs/technical-notes.md`: explanation of the technical findings.
 - `docs/session-summary.md`: what was changed during the original tuning session.
 

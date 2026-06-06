@@ -46,22 +46,27 @@ The optimizer applies runtime properties:
 
 ```text
 dalvik.vm.isa.x86.variant=default
-dalvik.vm.isa.x86.features=ssse3,sse4.1,sse4.2,-avx,-avx2,popcnt
+dalvik.vm.isa.x86.features=ssse3,sse4.1,sse4.2,popcnt,avx
 dalvik.vm.isa.x86_64.variant=default
-dalvik.vm.isa.x86_64.features=ssse3,sse4.1,sse4.2,-avx,-avx2,popcnt
+dalvik.vm.isa.x86_64.features=ssse3,sse4.1,sse4.2,popcnt,avx
+dalvik.vm.heapsize=512m
+dalvik.vm.heapmaxfree=8m
+dalvik.vm.heaptargetutilization=0.75
 ```
 
 It then runs:
 
 ```text
-cmd package compile -m speed -f --check-prof false <package>
+cmd package compile -m speed-profile -f --check-prof false <package>
 ```
 
 The verified target state was:
 
 ```text
-x86_64: [status=speed]
+x86_64: [status=speed-profile]
 ```
+
+The tested Pie64 image did not expose `/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor`, so Android governor tuning was not applicable there.
 
 ## BlueStacks Config
 

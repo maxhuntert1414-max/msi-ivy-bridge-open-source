@@ -15,7 +15,7 @@ This repository came from a hands-on tuning session for MSI BlueStacks on an Ivy
 - Native bridge: `libnb.so`
 - ARM64 mapping: `arm64 -> x86_64`
 - Example app ABI: `arm64-v8a`
-- Dexopt: `x86_64 [status=speed]`
+- Dexopt: `x86_64 [status=speed-profile]`
 - Elevated persistence check: admin run confirmed config, VM profile, and power plan persistence
 
 ## Changes Made
@@ -26,10 +26,11 @@ This repository came from a hands-on tuning session for MSI BlueStacks on an Ivy
 4. Set BlueStacks RAM to 8192 MB in both fresh and instance-specific config keys.
 5. Kept high FPS enabled and vsync disabled.
 6. Set ASTC mode to hardware after confirming GPU support and visual correctness.
-7. Applied Ivy Bridge-specific ART feature props.
-8. Recompiled the target package with dexopt speed mode.
+7. Applied Ivy Bridge-specific ART feature props including AVX, while leaving AVX2 out.
+8. Recompiled the target package with dexopt speed-profile mode.
 9. Avoided APK/system mutation that would increase account or anti-cheat risk.
 10. Added an elevated persistence check for the BlueStacks config, `BstkVMMgr` VM profile, and Windows power plan.
+11. Disabled Android animations and staged Dalvik heap runtime props for future app launches.
 
 ## Commands Used Most Often
 

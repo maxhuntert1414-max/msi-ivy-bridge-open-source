@@ -258,9 +258,16 @@ Log "ADB target: $device"
 
 $propCmd = @(
     "setprop dalvik.vm.isa.x86.variant default",
-    "setprop dalvik.vm.isa.x86.features ssse3,sse4.1,sse4.2,-avx,-avx2,popcnt",
+    "setprop dalvik.vm.isa.x86.features ssse3,sse4.1,sse4.2,popcnt,avx",
     "setprop dalvik.vm.isa.x86_64.variant default",
-    "setprop dalvik.vm.isa.x86_64.features ssse3,sse4.1,sse4.2,-avx,-avx2,popcnt"
+    "setprop dalvik.vm.isa.x86_64.features ssse3,sse4.1,sse4.2,popcnt,avx",
+    "setprop dalvik.vm.heapsize 512m",
+    "setprop dalvik.vm.heapmaxfree 8m",
+    "setprop dalvik.vm.heaptargetutilization 0.75",
+    "settings put global window_animation_scale 0.0",
+    "settings put global transition_animation_scale 0.0",
+    "settings put global animator_duration_scale 0.0",
+    "for g in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do if [ -e `"`$g`" ] && [ -w `"`$g`" ]; then echo performance > `"`$g`" 2>/dev/null; fi; done"
 ) -join "; "
 
 Run-Adb @("-s", $device, "shell", $propCmd) | ForEach-Object { Log "setprop: $_" }
@@ -278,7 +285,7 @@ if ($pkgPath -notmatch [regex]::Escape($Package)) {
 }
 
 Run-Adb @("-s", $device, "logcat", "-c") | Out-Null
-$compile = Run-Adb @("-s", $device, "shell", "cmd package compile -m speed -f --check-prof false $Package 2>&1")
+$compile = Run-Adb @("-s", $device, "shell", "cmd package compile -m speed-profile -f --check-prof false $Package 2>&1")
 $compile | ForEach-Object { Log "compile: $_" }
 
 $dexopt = Run-Adb @("-s", $device, "shell", "dumpsys package dexopt 2>/dev/null")
