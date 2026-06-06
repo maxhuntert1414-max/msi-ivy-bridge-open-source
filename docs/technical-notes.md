@@ -110,6 +110,19 @@ Power plan: Desempenho Maximo
 
 This confirms persistence at the Windows power-plan, BlueStacks config-file, and powered-off VM-profile layers. ART `setprop` values remain Android runtime state and should be reapplied after a full emulator restart.
 
+## Renderer A/B Testing
+
+For Free Fire normal (`com.dts.freefireth`), the goal is not to move ARM64 translation to the GPU. The native bridge remains CPU-bound. The useful renderer test is lower host overhead and better frame pacing.
+
+The reversible A/B helper stages:
+
+```text
+SetVulkan -> graphics_engine=aga, graphics_renderer=vlcn
+SetOpenGL -> graphics_engine=aga, graphics_renderer=gl
+```
+
+Both profiles keep dedicated GPU preference, high FPS mode, vsync off, and hardware ASTC. The helper writes a BlueStacks config backup before changing renderer state.
+
 ## Known Residual Warning
 
 Some BlueStacks builds keep this stock value in `/system/build.prop`:

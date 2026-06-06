@@ -64,6 +64,19 @@ Verify the current state:
 powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-xeon-verify.ps1" -AdbPort 5555
 ```
 
+Switch renderer profiles for an A/B test:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-renderer-abtest.ps1" -Mode SetOpenGL
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-renderer-abtest.ps1" -Mode SetVulkan
+```
+
+Collect CPU/GPU metrics while the emulator is running:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-renderer-abtest.ps1" -Mode Collect -Seconds 90
+```
+
 Run the elevated persistence check after closing the emulator VM:
 
 ```powershell
@@ -87,6 +100,7 @@ If the emulator is closed, the script can also try to persist the VirtualBox/Blu
 - `tools/msi-xeon-optimize.ps1`: main tuning script.
 - `tools/msi-xeon-verify.ps1`: verification script.
 - `tools/msi-xeon-admin-persistence-check.ps1`: elevated host/VM persistence check.
+- `tools/msi-renderer-abtest.ps1`: reversible renderer profile and metrics helper.
 - `docs/technical-notes.md`: explanation of the technical findings.
 - `docs/session-summary.md`: what was changed during the original tuning session.
 
