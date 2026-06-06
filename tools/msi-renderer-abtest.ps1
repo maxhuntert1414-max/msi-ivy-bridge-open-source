@@ -4,6 +4,7 @@ param(
     [string]$Instance = "Pie64",
     [int]$Seconds = 90,
     [int]$SampleMs = 1000,
+    [int]$TargetFps = 0,
     [switch]$NoBackup
 )
 
@@ -89,6 +90,7 @@ function Show-Status {
         "bst.instance.$Instance.enable_high_fps",
         "bst.instance.$Instance.enable_vsync",
         "bst.instance.$Instance.max_fps",
+        "bst.mim.max_fps",
         "bst.instance.$Instance.dpi"
     )
     foreach ($key in $keys) {
@@ -158,11 +160,16 @@ function Set-RendererProfile {
     Set-ConfValue -Path $conf -Key "bst.instance.$Instance.astc_decoding_mode" -Value "hardware"
     Set-ConfValue -Path $conf -Key "bst.instance.$Instance.enable_high_fps" -Value "1"
     Set-ConfValue -Path $conf -Key "bst.instance.$Instance.enable_vsync" -Value "0"
+    if ($TargetFps -gt 0) {
+        Set-ConfValue -Path $conf -Key "bst.instance.$Instance.max_fps" -Value ([string]$TargetFps)
+        Set-ConfValue -Path $conf -Key "bst.mim.max_fps" -Value ([string]$TargetFps)
+    }
 
     Log ("profile={0}" -f $Profile)
     Log ("graphics_engine={0}" -f (Get-ConfValue -Path $conf -Key "bst.instance.$Instance.graphics_engine"))
     Log ("graphics_renderer={0}" -f (Get-ConfValue -Path $conf -Key "bst.instance.$Instance.graphics_renderer"))
     Log ("astc_decoding_mode={0}" -f (Get-ConfValue -Path $conf -Key "bst.instance.$Instance.astc_decoding_mode"))
+    Log ("max_fps={0}" -f (Get-ConfValue -Path $conf -Key "bst.instance.$Instance.max_fps"))
     Log "restart_required=true"
 }
 

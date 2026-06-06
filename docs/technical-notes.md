@@ -123,6 +123,8 @@ SetOpenGL -> graphics_engine=aga, graphics_renderer=gl
 
 Both profiles keep dedicated GPU preference, high FPS mode, vsync off, and hardware ASTC. The helper writes a BlueStacks config backup before changing renderer state.
 
+Use `-TargetFps 240` or another explicit high value when comparing input feel. Keeping the same FPS target across profiles matters more than comparing renderer names in isolation.
+
 ## Known Residual Warning
 
 Some BlueStacks builds keep this stock value in `/system/build.prop`:

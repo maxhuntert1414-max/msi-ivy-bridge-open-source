@@ -67,8 +67,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-xeon-verify.ps1
 Switch renderer profiles for an A/B test:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-renderer-abtest.ps1" -Mode SetOpenGL
-powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-renderer-abtest.ps1" -Mode SetVulkan
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-renderer-abtest.ps1" -Mode SetOpenGL -TargetFps 240
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-renderer-abtest.ps1" -Mode SetVulkan -TargetFps 240
 ```
 
 Collect CPU/GPU metrics while the emulator is running:
