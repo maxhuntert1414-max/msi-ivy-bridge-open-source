@@ -2,7 +2,7 @@
 
 ## CPU Target
 
-The tested host CPU was an Intel Xeon E5-2650 v2. It is an Ivy Bridge CPU with SSE4.1, SSE4.2, SSSE3, POPCNT, and AVX support, but no AVX2.
+The tested host CPU was an Intel Xeon E5-2650 v2. It is an Ivy Bridge CPU with SSE4.1, SSE4.2, SSSE3, POPCNT, AVX, and F16C support, but no AVX2.
 
 For this emulator workload, the tested profile uses:
 
@@ -46,9 +46,9 @@ The optimizer applies runtime properties:
 
 ```text
 dalvik.vm.isa.x86.variant=default
-dalvik.vm.isa.x86.features=ssse3,sse4.1,sse4.2,popcnt,avx
+dalvik.vm.isa.x86.features=ssse3,sse4.1,sse4.2,popcnt,avx,f16c
 dalvik.vm.isa.x86_64.variant=default
-dalvik.vm.isa.x86_64.features=ssse3,sse4.1,sse4.2,popcnt,avx
+dalvik.vm.isa.x86_64.features=ssse3,sse4.1,sse4.2,popcnt,avx,f16c
 dalvik.vm.heapsize=512m
 dalvik.vm.heapmaxfree=8m
 dalvik.vm.heaptargetutilization=0.75
@@ -80,7 +80,7 @@ bst.instance.Pie64.cpus=8
 bst.instance.Pie64.ram=8192
 bst.instance.Pie64.enable_high_fps=1
 bst.instance.Pie64.enable_vsync=0
-bst.instance.Pie64.max_fps=60
+bst.instance.Pie64.max_fps=240
 bst.instance.Pie64.graphics_engine=aga
 bst.instance.Pie64.graphics_renderer=vlcn
 bst.instance.Pie64.astc_decoding_mode=hardware
@@ -115,7 +115,9 @@ Power plan: Desempenho Maximo
 
 This confirms persistence at the Windows power-plan, BlueStacks config-file, and powered-off VM-profile layers.
 
-## Integral Android Prop Patch
+## Archived Integral Android Prop Patch
+
+This section documents an experiment that was later abandoned as the public recommendation. It is kept for provenance, not as the normal operating path.
 
 The public optimizer keeps ART changes as runtime `setprop` operations. On the original lab machine, the final verified state was made persistent by an offline patch to `Data.vhdx`.
 
@@ -131,8 +133,8 @@ Then `Data.vhdx` was backed up and the exact matching blobs were replaced with s
 
 ```text
 dalvik.vm.heapsize=512m
-dalvik.vm.isa.x86_64.features=ssse3,sse4.1,sse4.2,popcnt,avx
-dalvik.vm.isa.x86.features=ssse3,sse4.1,sse4.2,popcnt,avx
+dalvik.vm.isa.x86_64.features=ssse3,sse4.1,sse4.2,popcnt,avx,f16c
+dalvik.vm.isa.x86.features=ssse3,sse4.1,sse4.2,popcnt,avx,f16c
 ```
 
 Root was not left enabled:
@@ -142,7 +144,22 @@ bst.instance.Pie64.enable_root_access="0"
 uid=2000(shell)
 ```
 
-After a full emulator restart, `getprop` returned the patched values directly, without rerunning the optimizer.
+That route was later abandoned as the public recommendation. The final project keeps those values as runtime/startup state and reapplies them through ADB after the emulator is reachable. This avoids making machine-specific byte edits to `Data.vhdx`.
+
+## CPU And Timer Safety
+
+The final power profile keeps the machine in a high-performance plan, but it does not force the processor minimum state to 100%.
+
+The safe values used by the cleanup script are:
+
+```text
+processor min state = 5
+processor max state = 100
+core parking min cores = 10
+core parking max cores = 100
+```
+
+The final workflow also removes the old permanent 0.5 ms timer-resolution scheduled task and removes BCD timer overrides such as `useplatformtick`, `disabledynamictick`, and `tscsyncpolicy`.
 
 ## Renderer A/B Testing
 

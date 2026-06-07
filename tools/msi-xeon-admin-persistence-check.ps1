@@ -128,7 +128,7 @@ if (Test-Path -LiteralPath $conf) {
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.ram" -Value "8192"
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.enable_high_fps" -Value "1"
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.enable_vsync" -Value "0"
-    Set-ConfValue -Path $conf -Key "bst.instance.Pie64.max_fps" -Value "60"
+    Set-ConfValue -Path $conf -Key "bst.instance.Pie64.max_fps" -Value "240"
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.graphics_engine" -Value "aga"
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.graphics_renderer" -Value "vlcn"
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.astc_decoding_mode" -Value $AstcMode

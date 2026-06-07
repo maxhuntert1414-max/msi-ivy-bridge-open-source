@@ -17,7 +17,7 @@ This repository came from a hands-on tuning session for MSI BlueStacks on an Ivy
 - Example app ABI: `arm64-v8a`
 - Dexopt: `x86_64 [status=speed-profile]`
 - Elevated persistence check: admin run confirmed config, VM profile, and power plan persistence
-- Integral Android props: `512m` heap and Ivy Bridge ISA features persisted after emulator restart
+- Final Android props strategy: runtime/startup reapply, not integral `Data.vhdx` patching
 - Root access: disabled in BlueStacks config and ADB remained `uid=2000(shell)`
 
 ## Changes Made
@@ -28,20 +28,21 @@ This repository came from a hands-on tuning session for MSI BlueStacks on an Ivy
 4. Set BlueStacks RAM to 8192 MB in both fresh and instance-specific config keys.
 5. Kept high FPS enabled and vsync disabled.
 6. Set ASTC mode to hardware after confirming GPU support and visual correctness.
-7. Applied Ivy Bridge-specific ART feature props including AVX, while leaving AVX2 out.
+7. Applied Ivy Bridge-specific ART feature props including AVX and F16C, while leaving AVX2 out.
 8. Recompiled the target package with dexopt speed-profile mode.
 9. Avoided APK/system mutation that would increase account or anti-cheat risk.
 10. Added an elevated persistence check for the BlueStacks config, `BstkVMMgr` VM profile, and Windows power plan.
 11. Disabled Android animations and staged Dalvik heap runtime props for future app launches.
-12. Backed up `Data.vhdx` and patched the existing Android prop blobs so the heap and ISA feature values survived a full emulator restart.
+12. Tested offline `Data.vhdx` prop patching, then moved the public workflow back to runtime/startup reapply.
 13. Set the VM XML/template AVX2 entry to `0`; the hypervisor log still printed an initial internal ExtraData line, but the effective guest CPU feature table reported AVX enabled and AVX2 disabled.
+14. Removed the old timer-resolution loop and kept the CPU power profile high-performance without forcing minimum CPU state to 100%.
 
 ## Commands Used Most Often
 
 Apply config and runtime tuning:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\msi-xeon-optimize.ps1" -AdbPort 5555 -TuneConfig -SetUltimatePower -LaunchApp
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\tools\run-msi-xeon-runtime-optimize.ps1" -AdbPort 5555 -TuneConfig -LaunchApp
 ```
 
 Verify current runtime:

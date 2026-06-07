@@ -8,7 +8,8 @@ param(
     [switch]$SkipAdb,
     [switch]$AssumeHyperThreading,
     [ValidateSet("software", "hardware")]
-    [string]$AstcMode = "hardware"
+    [string]$AstcMode = "hardware",
+    [string]$FeatureString = "ssse3,sse4.1,sse4.2,popcnt,avx,f16c"
 )
 
 $ErrorActionPreference = "Continue"
@@ -149,7 +150,7 @@ function Tune-BlueStacksConfig {
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.ram" -Value "8192"
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.enable_high_fps" -Value "1"
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.enable_vsync" -Value "0"
-    Set-ConfValue -Path $conf -Key "bst.instance.Pie64.max_fps" -Value "60"
+    Set-ConfValue -Path $conf -Key "bst.instance.Pie64.max_fps" -Value "240"
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.graphics_engine" -Value "aga"
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.graphics_renderer" -Value "vlcn"
     Set-ConfValue -Path $conf -Key "bst.instance.Pie64.astc_decoding_mode" -Value $AstcMode
@@ -210,18 +211,19 @@ function Set-ProcessorLatencyProfile {
     $scheme = $Matches[1]
     $processorSubgroup = "54533251-82be-4824-96c1-47b60b740d00"
     $settings = @(
-        @("893dee8e-2bef-41e0-89c6-b55d0929964c", 100, "processor min state"),
+        @("893dee8e-2bef-41e0-89c6-b55d0929964c", 5, "processor min state"),
         @("bc5038f7-23e0-4960-96da-33abaf5935ec", 100, "processor max state"),
-        @("0cc5b647-c1df-4637-891a-dec35c318583", 100, "core parking min cores"),
+        @("0cc5b647-c1df-4637-891a-dec35c318583", 10, "core parking min cores"),
         @("ea062031-0e34-4ff1-9b6d-eb1059334028", 100, "core parking max cores")
     )
 
     foreach ($setting in $settings) {
         powercfg /SETACVALUEINDEX $scheme $processorSubgroup $setting[0] $setting[1] | Out-Null
+        powercfg /SETDCVALUEINDEX $scheme $processorSubgroup $setting[0] $setting[1] | Out-Null
         if ($LASTEXITCODE -eq 0) {
-            Log ("Power AC {0}={1}" -f $setting[2], $setting[1])
+            Log ("Power AC/DC {0}={1}" -f $setting[2], $setting[1])
         } else {
-            Log ("Could not set power AC {0}; exit={1}" -f $setting[2], $LASTEXITCODE)
+            Log ("Could not set power AC/DC {0}; exit={1}" -f $setting[2], $LASTEXITCODE)
         }
     }
 
@@ -258,9 +260,9 @@ Log "ADB target: $device"
 
 $propCmd = @(
     "setprop dalvik.vm.isa.x86.variant default",
-    "setprop dalvik.vm.isa.x86.features ssse3,sse4.1,sse4.2,popcnt,avx",
+    "setprop dalvik.vm.isa.x86.features $FeatureString",
     "setprop dalvik.vm.isa.x86_64.variant default",
-    "setprop dalvik.vm.isa.x86_64.features ssse3,sse4.1,sse4.2,popcnt,avx",
+    "setprop dalvik.vm.isa.x86_64.features $FeatureString",
     "setprop dalvik.vm.heapsize 512m",
     "setprop dalvik.vm.heapmaxfree 8m",
     "setprop dalvik.vm.heaptargetutilization 0.75",
